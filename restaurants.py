@@ -11,4 +11,7 @@ def zipcode(x):
     return db.restaurants.find({"address.zipcode": str(x)})
 
 def belowRating(zipcode, threshold):
-    return db.restaurants.find({$and: [{"address.zipcode": zipcode}, {"grades.grade": {$lt: threshold}} ] })
+    return db.restaurants.find({$and: [{"address.zipcode": zipcode}, {"grades.score": {$lt: threshold}} ] })
+
+def notClever(grade, score):
+    db.restaurants.find({$and: [{"grades.grade": {$gt: grade} }, {"grades.score": {$gt: score} } ] })
