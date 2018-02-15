@@ -1,30 +1,51 @@
 
-# All restaurants in a specified borough.
-# All restaurants in a specified zip code.
-# All restaurants in a specified zip code and with a specified grade.
-# All restaurants in a specified zip code with a score below a specified threshold.
-# Something more clever.
-
-
-
-	
-
 import pymongo
+from pprint import pprint
 
 connection = pymongo.MongoClient("homer.stuy.edu")
 db = connection.test
 collection = db.restaurants
 
 def borough(x):
-    return collection.find({"borough": x})
+   output = collection.find({"borough": x})
+   for i in output:
+   		pprint(i)
+
 
 def zipcode(x):
-    return collection.find({"address.zipcode": str(x)})
+   	output = collection.find({"address.zipcode": str(x)})
+   	for i in output:
+   		pprint(i)
+
 
 def belowRating(zipcode, threshold):
-    return collection.find({"$and": [{"address.zipcode": zipcode}, {"grades.score": {"$lt": threshold}} ] })
-    
+    output = collection.find({'address.zipcode' : zipcode, "grades.score" : {'$lt' : threshold}})
 
-def notClever(grade, score):
-    return collection.find({"$and": [{"grades.grade": {"$gt": grade} }, {"grades.score": {"$gt": score} } ] })
+    for i in output:
+    	pprint(i)
+
+def notClever(zipcode, grade, score):
+    output = collection.find({"address.zipcode" : zipcode, "grades.grade": grade, "grades.score": {"$gt": score} }  )
+    for i in output:
+    	pprint(i)
+
+print("----------------Borough Staten Island--------------")
+print("===================================================")
+
+borough('Staten Island')
+
+print("----------------Zipcode 10282---------------")
+print("===================================================")
+zipcode('10282')
+
+print("----------------Zipcode 10282, belowRating 13---------------")
+print("===================================================")
+belowRating('10282', 13)
+
+print("----------------Zipcode 10282, Grade A, BelowRating 10---------------")
+print("===================================================")
+notClever('10282', 'B',10)
+
+
+
 
