@@ -1,4 +1,3 @@
-
 import pymongo
 from pprint import pprint
 
