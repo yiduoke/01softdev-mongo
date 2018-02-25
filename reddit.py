@@ -9,56 +9,62 @@ I just established a connection in this script
 '''
 
 import pymongo
-import json
+import json, urllib2
 from pprint import pprint
+
+object = urllib2.urlopen("https://www.reddit.com/r/deepfried.json")
+string = object.read()
+d = json.loads(string)
 
 connection = pymongo.MongoClient("homer.stuy.edu")
 db = connection['keY-taoI']
-collection = db['r/funny']
+collection = db['r/deepFried']
 
 # with open("reddit.json", 'r') as f:
 #     datastore = json.load(f)
 
-# # cleaning it up so the upper layers are gone
-# for document in datastore['data']['children']:
-#     collection.insert(document)
+# cleaning it up so the upper layers are gone
+for document in d['data']['children']:
+    collection.insert(document['data'])
 
 def below_score(threshold):
-    output = collection.find({"data.score" : {'$lt' : threshold}})
+    output = collection.find({"score" : {'$lt' : threshold}})
     for i in output:
    		pprint(i)
 
 def above_score(threshold):
-    output = collection.find({"data.score" : {'$gt' : threshold}})
+    output = collection.find({"score" : {'$gt' : threshold}})
     for i in output:
    		pprint(i)
 
 def below_ups(threshold):
-    output = collection.find({"data.ups" : {'$lt' : threshold}})
+    output = collection.find({"ups" : {'$lt' : threshold}})
     for i in output:
    		pprint(i)
 
 def above_ups(threshold):
-    output = collection.find({"data.ups" : {'$gt' : threshold}})
+    output = collection.find({"ups" : {'$gt' : threshold}})
     for i in output:
    		pprint(i)
 
 def below_comments(threshold):
-    output = collection.find({"data.num_comments" : {'$lt' : num_comments}})
+    output = collection.find({"num_comments" : {'$lt' : threshold}})
     for i in output:
    		pprint(i)
 
 def above_comments(threshold):
-    output = collection.find({"data.num_comments" : {'$gt' : num_comments}})
+    output = collection.find({"num_comments" : {'$gt' : threshold}})
     for i in output:
    		pprint(i)
 
 def is_video(boolean):
-    output = collection.find({"data.is_video" : boolean})
+    output = collection.find({"is_video" : boolean})
     for i in output:
    		pprint(i)
 
 def good_video(score_threshold, ups_threshold):
-    output = collection.find({"data.is_video" : True, "data.score": {'$gt': score_threshold}, "data.ups": {'$gt': ups_threshold}})
+    output = collection.find({"is_video" : True, "score": {'$gt': score_threshold}, "ups": {'$gt': ups_threshold}})
     for i in output:
    		pprint(i)
+
+above_comments(6)
