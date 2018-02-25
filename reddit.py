@@ -1,8 +1,8 @@
 '''
-/r/funny json from reddit
-it includes data about each post on the front page of the funny subreddit at the time I got it (2/16)
+/r/DeepFried json from reddit
+it includes data about each post on the front page of the DeepFried at real time if you comment stuff in
 
-https://www.reddit.com/r/funny.json
+https://www.reddit.com/r/deepfried.json
 
 I got rid of several top layers so I could have separate documents for each post
 I just established a connection in this script
@@ -20,12 +20,9 @@ connection = pymongo.MongoClient("homer.stuy.edu")
 db = connection['keY-taoI']
 collection = db['r/deepFried']
 
-# with open("reddit.json", 'r') as f:
-#     datastore = json.load(f)
-
 # cleaning it up so the upper layers are gone
-for document in d['data']['children']:
-    collection.insert(document['data'])
+# for document in d['data']['children']:
+#     collection.insert(document['data'])
 
 def below_score(threshold):
     output = collection.find({"score" : {'$lt' : threshold}})
@@ -66,5 +63,3 @@ def good_video(score_threshold, ups_threshold):
     output = collection.find({"is_video" : True, "score": {'$gt': score_threshold}, "ups": {'$gt': ups_threshold}})
     for i in output:
    		pprint(i)
-
-above_comments(6)
